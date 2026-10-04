@@ -33,3 +33,20 @@ export async function getBookableResources() {
 
     return response.json();
 }
+
+export async function getBookings() {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${BASE_URL}/bookings`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch bookings");
+    }
+
+    return response.json();
+}
