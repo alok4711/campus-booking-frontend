@@ -16,3 +16,20 @@ export async function loginUser(email, password) {
 
     return response.json();
 }
+
+export async function getBookableResources() {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${BASE_URL}/bookable-resources`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch resources");
+    }
+
+    return response.json();
+}

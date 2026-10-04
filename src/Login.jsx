@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "./api";
 
-function Login() {
+function Login({ onLoginSuccess }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -13,7 +13,7 @@ function Login() {
         try {
             const data = await loginUser(email, password);
             localStorage.setItem("token", data.token);
-            console.log("Login successful, token stored");
+            onLoginSuccess();
         } catch (err) {
             setError(err.message);
         }
