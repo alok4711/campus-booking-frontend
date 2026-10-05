@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBookableResources, getBookings } from "./api";
+import BookingForm from "./BookingForm";
 
 function Dashboard() {
     const [resources, setResources] = useState([]);
@@ -28,6 +29,11 @@ function Dashboard() {
         navigate("/login");
     }
 
+    async function refreshBookings() {
+        const bookingData = await getBookings();
+        setBookings(bookingData);
+    }
+
     return (
         <div>
             <button onClick={handleLogout}>Logout</button>
@@ -37,7 +43,7 @@ function Dashboard() {
             <ul>
                 {resources.map((resource) => (
                     <li key={resource.id}>
-                        {resource.resourceName} — {resource.resourceType} — Capacity: {resource.capacity}
+                        (ID: {resource.id}) {resource.resourceName} — {resource.resourceType} — Capacity: {resource.capacity}
                     </li>
                 ))}
             </ul>
@@ -51,6 +57,8 @@ function Dashboard() {
                     </li>
                 ))}
             </ul>
+
+            <BookingForm onBookingCreated={refreshBookings} />
         </div>
     );
 }

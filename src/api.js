@@ -50,3 +50,23 @@ export async function getBookings() {
 
     return response.json();
 }
+
+export async function createBooking(bookingData) {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${BASE_URL}/bookings`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(bookingData),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Booking failed");
+    }
+
+    return response.json();
+}
