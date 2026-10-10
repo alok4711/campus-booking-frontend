@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "./api";
+import { Link } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -28,6 +29,7 @@ function Login() {
             <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <button type="submit">Login</button>
+            <p> New here? <Link to="/register">Register</Link> </p>
         </form>
     );
 }

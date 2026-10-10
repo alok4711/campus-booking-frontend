@@ -106,3 +106,32 @@ export function getUserRoles() {
         return [];
     }
 }
+
+export function getUserEmail() {
+    const token = localStorage.getItem("token");
+    if (!token) return "";
+
+    try {
+        const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+        return JSON.parse(atob(base64)).sub || "";
+    } catch {
+        return "";
+    }
+}
+
+export async function registerUser(name, email, password) {
+    const response = await fetch(`${BASE_URL}/users/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Registration failed");
+    }
+
+    return response.json();
+}
