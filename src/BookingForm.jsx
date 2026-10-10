@@ -46,8 +46,8 @@ function BookingForm({ resources, onBookingCreated }) {
     return (
         <form onSubmit={handleSubmit}>
             <h3>New Booking</h3>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {success && <p style={{ color: "green" }}>{success}</p>}
+            {error && <p className="error">{error}</p>}
+            {success && <p className="success">{success}</p>}
 
             <select value={resourceId} onChange={(e) => setResourceId(e.target.value)} required>
                 <option value="">Select a resource</option>

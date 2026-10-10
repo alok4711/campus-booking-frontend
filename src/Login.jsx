@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "./api";
-import { Link } from "react-router-dom";
+import AuthLayout from "./AuthLayout";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -16,21 +16,48 @@ function Login() {
         try {
             const data = await loginUser(email, password);
             localStorage.setItem("token", data.token);
-            navigate("/dashboard");
+            navigate("/overview");
         } catch (err) {
             setError(err.message);
         }
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Login</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button type="submit">Login</button>
-            <p> New here? <Link to="/register">Register</Link> </p>
-        </form>
+        <AuthLayout title="Welcome back" subtitle="Log in with your college email.">
+            <form onSubmit={handleSubmit}>
+                {error && <p className="error">{error}</p>}
+
+                <label className="field">
+                    <span>Email</span>
+                    <input
+                        type="email"
+                        placeholder="you@annauniv.edu"
+                        autoComplete="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </label>
+
+                <label className="field">
+                    <span>Password</span>
+                    <input
+                        type="password"
+                        placeholder="Your password"
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </label>
+
+                <button type="submit" className="btn-block">Log in</button>
+            </form>
+
+            <p className="auth-switch">
+                New here? <Link to="/register">Create an account</Link>
+            </p>
+        </AuthLayout>
     );
 }
 
