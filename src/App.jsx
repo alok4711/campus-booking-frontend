@@ -8,6 +8,7 @@ import Resources from "./pages/Resources";
 import Bookings from "./pages/Bookings";
 import NewBooking from "./pages/NewBooking";
 import Approvals from "./pages/Approvals";
+import Verify from "./Verify";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/verify" element={<Verify />} />
 
                 <Route
                     element={

@@ -135,3 +135,20 @@ export async function registerUser(name, email, password) {
 
     return response.json();
 }
+
+export async function verifyEmail(token) {
+    const response = await fetch(`${BASE_URL}/users/verify?token=${encodeURIComponent(token)}`);
+    const text = await response.text();
+
+    if (!response.ok) {
+        let message = "Verification failed";
+        try {
+            message = JSON.parse(text).error || message;
+        } catch {
+            // body wasn't JSON, keep the default message
+        }
+        throw new Error(message);
+    }
+
+    return text;
+}
