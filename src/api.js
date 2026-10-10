@@ -70,3 +70,39 @@ export async function createBooking(bookingData) {
 
     return response.json();
 }
+
+export async function approveBooking(id) {
+    return updateBookingStatus(id, "approve");
+}
+
+export async function rejectBooking(id) {
+    return updateBookingStatus(id, "reject");
+}
+
+async function updateBookingStatus(id, action) {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${BASE_URL}/bookings/${id}/${action}`, {
+        method: "PUT",
+        headers: { "Authorization": `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+        throw new Error("You are not allowed to do this, or the request failed");
+    }
+
+    return response.json();
+}
+
+export function getUserRoles() {
+    const token = localStorage.getItem("token");
+    if (!token) return [];
+
+    try {
+        const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+        const payload = JSON.parse(atob(base64));
+        return payload.roles || [];
+    } catch {
+        return [];
+    }
+}

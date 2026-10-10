@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getBookableResources, getBookings } from "./api";
+import { getBookableResources, getBookings, approveBooking, rejectBooking, getUserRoles } from "./api";
 import BookingForm from "./BookingForm";
 
 function Dashboard() {
@@ -23,6 +23,24 @@ function Dashboard() {
         }
         fetchData();
     }, []);
+
+
+    const roles = getUserRoles();
+    const canReview = roles.includes("HOD") || roles.includes("DEAN");
+
+    async function handleReview(id, action) {
+        try {
+            setError("");
+            if (action === "approve") {
+                await approveBooking(id);
+            } else {
+                await rejectBooking(id);
+            }
+            await refreshBookings();
+        } catch (err) {
+            setError(err.message);
+        }
+    }
 
     function handleLogout() {
         localStorage.removeItem("token");
@@ -54,6 +72,13 @@ function Dashboard() {
                     <li key={booking.id}>
                         {booking.bookingPurpose} — {booking.resource?.resourceName} —{" "}
                         {booking.startTime} to {booking.endTime} — {booking.status}
+                        {canReview && booking.status === "PENDING" && (
+                            <>
+                                {" "}
+                                <button onClick={() => handleReview(booking.id, "approve")}>Approve</button>
+                                <button onClick={() => handleReview(booking.id, "reject")}>Reject</button>
+                            </>
+                        )}
                     </li>
                 ))}
             </ul>
