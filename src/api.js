@@ -124,13 +124,11 @@ export function getUserName() {
     return readTokenPayload().name || "";
 }
 
-export async function registerUser(name, email, password) {
+export async function registerUser(name, email, password, departmentId) {
     const response = await fetch(`${BASE_URL}/users/register`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, departmentId }),
     });
 
     if (!response.ok) {
@@ -156,4 +154,12 @@ export async function verifyEmail(token) {
     }
 
     return text;
+}
+
+export async function getDepartments() {
+    const response = await fetch(`${BASE_URL}/departments`);
+    if (!response.ok) {
+        throw new Error("Could not load departments");
+    }
+    return response.json();
 }
