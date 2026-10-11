@@ -5,12 +5,12 @@ import { formatDateTime } from "../utils";
 const STATUSES = ["ALL", "PENDING", "APPROVED", "REJECTED"];
 
 function Bookings() {
-    const { bookings, email } = useOutletContext();
+    const { bookings } = useOutletContext();
     const [view, setView] = useState("mine");
     const [status, setStatus] = useState("ALL");
 
     const list = bookings
-        .filter((b) => view === "all" || b.bookedBy?.email === email)
+        .filter((b) => view === "all" || b.mine)
         .filter((b) => status === "ALL" || b.status === status)
         .sort((a, b) => new Date(b.startTime) - new Date(a.startTime));
 
@@ -54,10 +54,10 @@ function Bookings() {
                             <div className="booking-main">
                                 <div className="row-title">{b.bookingPurpose}</div>
                                 <div className="row-sub">
-                                    {b.resource?.resourceName} · {formatDateTime(b.startTime)} → {formatDateTime(b.endTime)}
+                                    {b.resourceName} · {formatDateTime(b.startTime)} → {formatDateTime(b.endTime)}
                                 </div>
-                                {view === "all" && b.bookedBy?.name && (
-                                    <div className="row-sub">by {b.bookedBy.name}</div>
+                                {view === "all" && b.mine === false && b.bookedByName && (
+                                    <div className="row-sub">by {b.bookedByName}</div>
                                 )}
                             </div>
                             <span className={`badge badge-${b.status.toLowerCase()}`}>{b.status}</span>

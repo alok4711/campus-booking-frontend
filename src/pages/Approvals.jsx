@@ -44,10 +44,10 @@ function Approvals() {
                         <div className="booking-main">
                             <div className="row-title">{b.bookingPurpose}</div>
                             <div className="row-sub">
-                                {b.resource?.resourceName} · {formatDateTime(b.startTime)} → {formatDateTime(b.endTime)}
+                                {b.resourceName} · {formatDateTime(b.startTime)} → {formatDateTime(b.endTime)}
                             </div>
                             <div className="row-sub">
-                                Requested by {b.bookedBy?.name || b.bookedBy?.email} · {b.attendeesCount} attendees
+                                Requested by {b.bookedByName || b.bookedByEmail} · {b.attendeesCount} attendees
                             </div>
                         </div>
                         <div className="actions">

@@ -94,29 +94,34 @@ async function updateBookingStatus(id, action) {
     return response.json();
 }
 
-export function getUserRoles() {
+function readTokenPayload() {
     const token = localStorage.getItem("token");
-    if (!token) return [];
+    if (!token) return {};
 
     try {
         const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-        const payload = JSON.parse(atob(base64));
-        return payload.roles || [];
+        const json = decodeURIComponent(
+            atob(base64)
+                .split("")
+                .map((c) => "%" + c.charCodeAt(0).toString(16).padStart(2, "0"))
+                .join("")
+        );
+        return JSON.parse(json);
     } catch {
-        return [];
+        return {};
     }
 }
 
-export function getUserEmail() {
-    const token = localStorage.getItem("token");
-    if (!token) return "";
+export function getUserRoles() {
+    return readTokenPayload().roles || [];
+}
 
-    try {
-        const base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
-        return JSON.parse(atob(base64)).sub || "";
-    } catch {
-        return "";
-    }
+export function getUserEmail() {
+    return readTokenPayload().sub || "";
+}
+
+export function getUserName() {
+    return readTokenPayload().name || "";
 }
 
 export async function registerUser(name, email, password) {
@@ -145,7 +150,7 @@ export async function verifyEmail(token) {
         try {
             message = JSON.parse(text).error || message;
         } catch {
-            // body wasn't JSON, keep the default message
+            
         }
         throw new Error(message);
     }

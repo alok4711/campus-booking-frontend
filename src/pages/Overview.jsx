@@ -2,12 +2,12 @@ import { Link, useOutletContext } from "react-router-dom";
 import { formatDateTime } from "../utils";
 
 function Overview() {
-    const { resources, bookings, email, canReview } = useOutletContext();
+    const { resources, bookings, name, email, canReview } = useOutletContext();
 
     const rawName = email.split("@")[0];
-    const displayName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+    const displayName = name ? name.split(" ")[0] : email.split("@")[0];
 
-    const mine = bookings.filter((b) => b.bookedBy?.email === email);
+    const mine = bookings.filter((b) => b.mine);
     const myApproved = mine.filter((b) => b.status === "APPROVED").length;
     const pendingNumber = canReview
         ? bookings.filter((b) => b.status === "PENDING").length
@@ -75,7 +75,7 @@ function Overview() {
                                 <div>
                                     <div className="row-title">{b.bookingPurpose}</div>
                                     <div className="row-sub">
-                                        {b.resource?.resourceName} · {formatDateTime(b.startTime)}
+                                        {b.resourceName} · {formatDateTime(b.startTime)}
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@ function Overview() {
                             <div className="row" key={b.id}>
                                 <div>
                                     <div className="row-title">{b.bookingPurpose}</div>
-                                    <div className="row-sub">{b.resource?.resourceName}</div>
+                                    <div className="row-sub">{b.resourceName}</div>
                                 </div>
                                 <span className={`badge badge-${b.status.toLowerCase()}`}>{b.status}</span>
                             </div>

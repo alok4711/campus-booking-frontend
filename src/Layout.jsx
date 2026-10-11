@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { getBookableResources, getBookings, getUserRoles, getUserEmail } from "./api";
+import { getBookableResources, getBookings, getUserRoles, getUserEmail, getUserName } from "./api";
 
 function Layout() {
     const [resources, setResources] = useState([]);
@@ -11,6 +11,7 @@ function Layout() {
 
     const roles = getUserRoles();
     const email = getUserEmail();
+    const name = getUserName();
     const canReview = roles.includes("HOD") || roles.includes("DEAN");
 
     useEffect(() => {
@@ -62,9 +63,9 @@ function Layout() {
 
                 <div className="user-section">
                     <div className="user-card">
-                        <div className="avatar">{email ? email[0].toUpperCase() : "?"}</div>
+                        <div className="avatar">{(name || email || "?")[0].toUpperCase()}</div>
                         <div className="user-info">
-                            <div className="user-email">{email}</div>
+                            <div className="user-email">{name || email}</div>
                             <div className="user-roles">{roles.join(" · ")}</div>
                         </div>
                     </div>
@@ -77,7 +78,7 @@ function Layout() {
                 {loading ? (
                     <p className="muted">Loading...</p>
                 ) : (
-                    <Outlet context={{ resources, bookings, refreshBookings, email, roles, canReview }} />
+                    <Outlet context={{ resources, bookings, refreshBookings, email, name, roles, canReview }} />
                 )}
             </main>
         </div>
